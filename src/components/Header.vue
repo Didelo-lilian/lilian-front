@@ -76,7 +76,7 @@
 					<a title="Site de Noah SOLER'" href="https://noah.didelo.fr"
 						>Noah SOLER</a
 					>
-					<a href="https://didelo.fr" class="icon" onclick="mobileNav()" alt="Rien" aria-label="Rien">
+					<a href="javascript:void(0);" class="icon" @click="mobileNav()" alt="Rien" aria-label="Rien">
 						&#9776;</a
 					>
 				</div>
