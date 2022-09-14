@@ -10,7 +10,7 @@
 							v-for="(lesson, index2) in cours?.lessons"
 							:key="'lesson-' + index2"
 						>
-							<a v-if="lesson.link.match('cours')" :href="'/' + lesson.link"
+							<a v-if="lesson.link.match('cours')" :href="lesson.link"
 								><span v-if="lesson.day != '-1'">{{ lesson.day }} - </span
 								>{{ lesson.title }}</a
 							>
@@ -112,13 +112,13 @@ export default defineComponent({
 				.then((response: AxiosResponse<{ student: Student }>) => {
 					this.student = response.data.student;
 					this.student.name = this.capitalize(this.student.name);
-					// this.student.cours.forEach(month => {
-					// 	month.lessons.forEach(lesson => {
-					// 		if(lesson.link.match("cours")){
-					// 			// lesson.link = lesson.link.replace("cours", "/cours");
-					// 			console.log(lesson.link);
-					// 		}
-					// })
+          this.student.cours.forEach(month => {
+            month.lessons.forEach(lesson => {
+              if(lesson.link.match('./cours')) {
+                lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
+              }
+            });
+          })
 				});
 			console.log(this.student);
 		},
