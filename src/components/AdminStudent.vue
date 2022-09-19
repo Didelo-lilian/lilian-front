@@ -187,9 +187,9 @@ export default defineComponent({
 			this.verify();
 			_axios
 				.put(
-					`student/${this.student}`,
+					`student`,
 					{
-						name: document.querySelector("select")?.value,
+						name: this.studentSelected,
 						month: this.month,
 						lessons: {
 							day: this.day,
