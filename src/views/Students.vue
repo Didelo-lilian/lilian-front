@@ -118,7 +118,7 @@ export default defineComponent({
                 lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
               }
 	      if(lesson.link.match('cours/')) {
-                lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours');
+                lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
               }
 	      
             });
