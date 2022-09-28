@@ -115,7 +115,14 @@ export default defineComponent({
           this.student.cours.forEach(month => {
             month.lessons.forEach(lesson => {
               if(lesson.link.match('./cours')) {
+	        console.log("Ancien lien : " + lesson.link)
                 lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
+		console.log("Nouveau lien : " + lesson.link)
+              }
+	      if(lesson.link.match('cours/')) {
+	        console.log("Ancien lien : " + lesson.link)
+                lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
+		console.log("Nouveau lien : " + lesson.link)
               }
             });
           })
