@@ -127,6 +127,11 @@ export default defineComponent({
 				.get(`studentUtils`)
 				.then((response: AxiosResponse<Util[]>) => {
 					this.utils = response.data;
+          this.utils.forEach(util => {
+            if(util.link.match('cours/')) {
+              util.link = util.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
+            }
+          })
 				});
 		},
 	},
