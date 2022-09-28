@@ -116,10 +116,11 @@ export default defineComponent({
             month.lessons.forEach(lesson => {
               if(lesson.link.match('./cours')) {
                 lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
-              }
-	      if(lesson.link.match('cours/')) {
-                lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
-              }
+              } else{
+		      if(lesson.link.match('cours/')) {
+			lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
+		      }
+		     }
 	      
             });
           })
