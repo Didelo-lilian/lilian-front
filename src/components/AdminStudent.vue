@@ -69,6 +69,29 @@
 			</form>
 		</section>
 		<hr />
+    <section>
+      <h2>Modifier la classe d'un étudiant</h2>
+      <form>
+        <label for="student">
+          <span>Nom de l'étudiant</span>
+          <select name="student" v-model="studentSelected">
+            <option
+                v-for="studentName in studentsName"
+                :value="studentName"
+                :key="studentName"
+            >
+              {{ studentName }}
+            </option>
+          </select>
+        </label>
+        <label for="classe">
+          <span>Classe</span>
+          <input type="text" name="classe" v-model="newClasse" required />
+        </label>
+        <button type="submit" @click="submitUpdateStudentClass">Click Here</button>
+      </form>
+    </section>
+    <hr>
 	</div>
 </template>
 
@@ -104,6 +127,7 @@ interface DataComponent {
 	title: string;
 	studentSelected: string;
 	studentSelectedDeleted: string;
+  newClasse: string;
 }
 
 export default defineComponent({
@@ -119,6 +143,7 @@ export default defineComponent({
 			title: "",
 			studentSelected: "",
 			studentSelectedDeleted: "",
+      newClasse: "",
 		};
 	},
 	methods: {
@@ -238,6 +263,32 @@ export default defineComponent({
 					console.log(error);
 				});
 		},
+    submitUpdateStudentClass(e: Event): void {
+      e.preventDefault();
+      this.verify();
+      _axios
+        .put(
+          `student/class`,
+          {
+            name: this.studentSelected,
+            class: this.newClasse,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((response: AxiosResponse) => {
+          console.log(response);
+          alert("Modifié !");
+          this.loadStudentsName();
+        })
+        .catch((error: Error) => {
+          alert("Erreur !");
+          console.log(error);
+        });
+    },
 	},
 	mounted() {
 		this.loadStudentsName();

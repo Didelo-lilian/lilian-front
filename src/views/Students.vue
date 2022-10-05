@@ -113,19 +113,20 @@ export default defineComponent({
 					this.student = response.data.student;
 					this.student.name = this.capitalize(this.student.name);
           this.student.cours.forEach(month => {
-            month.lessons.forEach(lesson => {
-              if(lesson.link.match('./cours')) {
-                lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
-              } else{
-		      if(lesson.link.match('cours/')) {
-			lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
-		      }
-		     }
-	      
-            });
-          })
-				});
-			console.log(this.student);
+                month.lessons.forEach(lesson => {
+                  if(lesson.link.match('./cours')) {
+                    lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
+                  } else{
+                    if(lesson.link.match('cours/')) {
+                      lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
+                    }
+                  }
+                });
+              });
+                  })
+        .catch((error) => {
+          console.log(error);
+        });
 		},
 		loadUtils(): void {
 			_axios
