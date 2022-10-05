@@ -169,6 +169,7 @@ export default defineComponent({
 					response.data.students.forEach(element => {
 						newStudent.push(element.name);
 					});
+          newStudent.sort();
 					this.studentsName = newStudent;
 				})
 				.catch(error => {
