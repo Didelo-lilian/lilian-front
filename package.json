@@ -3,8 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "vite --mode dev",
-		"dev:prod": "vite --mode prod",
+		"dev": "vite --host --mode dev",
+		"dev:prod": "vite --host--mode prod",
 		"build:prod": "vue-tsc --noEmit && vite build --mode prod",
 		"build:preprod": "vue-tsc --noEmit && vite build --mode prod",
 		"build:dev" : "vue-tsc --noEmit && vite build --mode preprod",
