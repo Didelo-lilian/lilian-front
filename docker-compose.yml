@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  frontend:
+    container_name: frontend
+    image: node:lts-alpine
+    working_dir: /var/www/html/app/
+    entrypoint: /bin/bash
+    expose:
+      - 8080
+    volumes:
+      - ./lilian-front/:var/www/html/app
+    tty: true
