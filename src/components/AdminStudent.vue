@@ -34,13 +34,25 @@
 					<span>Mois</span>
 					<input type="text" name="month" v-model="month" required />
 				</label>
+        <label for="monthInt">
+          <span>Mois(int)</span>
+          <input type="int" name="monthInt" v-model="monthInt" required />
+        </label>
 				<label for="day">
 					<span>Jour</span>
 					<input type="text" name="day" v-model="day" required />
 				</label>
+        <label for="isInterne">
+          <span>Est-ce-que le fichier est présent dans lilian-data ?</span>
+          <input type="checkbox" name="isInterne" v-model="isInterne" />
+        </label>
+        <label for="isCours">
+          <span>Est-ce-que le fichier est un cours ?</span>
+          <input type="checkbox" name="isCours" v-model="isCours" />
+        </label>
 				<label for="link">
 					<span>Lien</span>
-					<input type="text" name="link" v-model="link" required />
+					<input type="text" name="link" v-model="link" />
 				</label>
 				<label for="title">
 					<span>Titre</span>
@@ -50,6 +62,25 @@
 			</form>
 		</section>
 		<hr />
+    <section>
+      <h2>Supprimer la dernière lecon d'un étudiant</h2>
+      <form>
+        <label for="student">
+          <span>Nom de l'étudiant</span>
+          <select name="student" v-model="studentSelected">
+            <option
+                v-for="studentName in studentsName"
+                :value="studentName"
+                :key="studentName"
+            >
+              {{ studentName }}
+            </option>
+          </select>
+        </label>
+        <button type="submit" @click="submitDeleteLastLesson">Click Here</button>
+      </form>
+    </section>
+    <hr>
 		<section>
 			<h2>Supprimer un étudiant</h2>
 			<form>
@@ -121,11 +152,14 @@ interface DataComponent {
 	studentsName: string[];
 	student: string;
 	month: string;
+  monthInt: number;
 	classe: string;
 	day: string;
 	link: string;
 	title: string;
 	studentSelected: string;
+  isInterne: boolean;
+  isCours: boolean;
 	studentSelectedDeleted: string;
   newClasse: string;
 }
@@ -137,11 +171,14 @@ export default defineComponent({
 			studentsName: [],
 			student: "",
 			month: "",
+      monthInt: 0,
 			classe: "",
 			day: "",
 			link: "",
 			title: "",
 			studentSelected: "",
+      isInterne: false,
+      isCours: false,
 			studentSelectedDeleted: "",
       newClasse: "",
 		};
@@ -210,6 +247,17 @@ export default defineComponent({
 		submitUpdateStudent(e: Event): void {
 			e.preventDefault();
 			this.verify();
+      let newLink = this.link;
+      let newTitle = this.title;
+      if(this.isInterne){
+        newLink = "cours/" + this.studentSelected + "/";
+        if(this.isCours) {
+          newLink+= this.day + "-" + this.monthInt + "-" + this.studentSelected + ".pdf";
+          newTitle = "Cours - " + this.title;
+        } else {
+          newLink += this.link;
+        }
+      }
 			_axios
 				.put(
 					`student`,
@@ -218,8 +266,8 @@ export default defineComponent({
 						month: this.month,
 						lessons: {
 							day: this.day,
-							title: this.title,
-							link: this.link,
+							title: newTitle,
+							link: newLink,
 						},
 					},
 					{
@@ -283,6 +331,30 @@ export default defineComponent({
           console.log(response);
           alert("Modifié !");
           this.loadStudentsName();
+        })
+        .catch((error: Error) => {
+          alert("Erreur !");
+          console.log(error);
+        });
+    },
+    submitDeleteLastLesson(e: Event): void {
+      e.preventDefault();
+      this.verify();
+      _axios
+        .delete(
+          `student/lesson`,
+          {
+            data: {
+              name: this.studentSelected,
+            },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((response: AxiosResponse) => {
+          console.log(response);
+          alert("Supprimé !");
         })
         .catch((error: Error) => {
           alert("Erreur !");
