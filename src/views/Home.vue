@@ -1,19 +1,17 @@
 <template>
 	<div class="home">
 		<main>
-			<div v-for="(article, index) in articles" :key="'article-' + index">
-				<article>
-					<p
-						v-for="(paragraph, index2) in article.paragraphs"
-						:key="'paragraph-' + index2"
-					>
-						{{ paragraph.text }}
-					</p>
-				</article>
-				<hr />
-			</div>
+      <div v-for="article in articles" :key="article.language">
+        <article>
+          <p v-for="(paragraph, index) in article.paragraphs" :key=index>
+            {{ paragraph }}
+          </p>
+        </article>
+        <hr />
+      </div>
 		</main>
-	</div>
+  </div>
+
 </template>
 
 <script lang="ts">
@@ -22,33 +20,47 @@ import { AxiosResponse } from "axios";
 import _axios from "@/plugins/axios";
 
 interface Article {
-	paragraphs: [
-		{
-			text: string;
-		}
-	];
+	language: string;
+  paragraphs: string[];
 }
 
 interface DataComponent {
 	articles: null | Article[];
+  languages: null | string[];
 }
+
+
 
 export default defineComponent({
 	name: "Home",
 	data(): DataComponent {
 		return {
-			articles: null,
+			articles: [],
+      languages: ["French", "English", "Spanish"]
 		};
 	},
+  methods: {
+    async getArticles(languages: string[]) {
+      for (const language of languages) {
+        await _axios
+            .get(`v2/home/${language}`)
+            .then((response: AxiosResponse) => {
+              let paragraphs : string[] = [];
+              response.data.forEach((p: {paragraph: string}) => {
+                paragraphs?.push(p.paragraph);
+              });
+              this.articles?.push({'language': language, "paragraphs": paragraphs});
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+      }
+    }
+  },
 	mounted() {
-		_axios
-			.get("home")
-			.then((res: AxiosResponse<Article[]>) => {
-				this.articles = res.data;
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+    if(this.languages) {
+      this.getArticles(this.languages);
+    }
 	},
 });
 </script>
