@@ -181,7 +181,6 @@ export default defineComponent({
 			.get(`school`)
 			.then(
 				(res: AxiosResponse<School[]>) => {
-					console.log(res.data);
 					let newschools: SchoolInfo[] = [];
 					res.data.forEach(element => {
 						newschools.push({level: element.level, title: element.title});
