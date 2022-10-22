@@ -26,8 +26,8 @@ interface Article {
 
 interface DataComponent {
   articles: null | Article[];
-  priorityLanguages: null | string[];
-  nonPriorityLanguages: null | string[];
+  priorityLanguages: string[];
+  nonPriorityLanguages: string[];
 }
 
 interface ResponseAux {
@@ -58,7 +58,11 @@ export default defineComponent({
                   paragraphs: article.paragraphs
                 });
               }
-              this.articles = this.articles.concat(articles);
+              if (this.articles) {
+                this.articles = this.articles.concat(articles);
+              } else {
+                this.articles = articles;
+              }
             })
             .catch((error) => {
               console.log(error);
