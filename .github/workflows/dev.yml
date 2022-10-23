@@ -57,14 +57,14 @@ jobs:
         remote_user: ${{ secrets.O2SWITCH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
 
-  build_and_deploy_dev_o2switch:
+  build_and_deploy_preprod_o2switch:
     needs: [build_and_deploy_dev_o2switch]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - run: |
           yarn
-          yarn run build:dev 
+          yarn run build:preprod 
     - name: rsync deployments
       uses: burnett01/rsync-deployments@5.2
       with:
