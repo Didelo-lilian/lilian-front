@@ -58,7 +58,7 @@ jobs:
         remote_key: ${{ secrets.SSH_KEY }}
 
   build_and_deploy_dev_o2switch:
-    needs: [build_and_deploy_preprod]
+    needs: [build_and_deploy_dev_o2switch]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
