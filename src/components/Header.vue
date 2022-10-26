@@ -1,211 +1,208 @@
 <template>
-	<header>
-		<div class="header">
-			<router-link class="nav-link" alt="Logo avec effet de saisie" aria-label="Logo avec effet de saisie" to="/">
-				<TypedComponent></TypedComponent>
-			</router-link>
-			<div class="header-right">
-				<div class="topnav" id="topNav">
-					<div class="dropdown">
-						<button class="dropbtn">
-							PEIP 2, INFO3
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<div class="dropdown-content">
-						<router-link
-								class="nav-link"
-								v-for="schoolInfo in schoolsInfo"
-								:to="schoolRoad(schoolInfo.level, schoolInfo.title)"
-								:key="schoolInfo.title"
-							>
-								{{ capitalize(schoolInfo.title) }}</router-link
-							>
-						</div>
-					</div>
-					<div class="dropdown">
-						<button class="dropbtn">
-							Cours
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<div class="dropdown-content">
-							<router-link
-								class="nav-link"
-								v-for="studentName in studentsName"
-								:to="studentRoad(studentName)"
-								:key="studentName"
-							>
-								{{ capitalize(studentName) }}</router-link
-							>
-						</div>
-					</div>
+  <header>
+    <div class="header">
+      <router-link class="nav-link" alt="Logo avec effet de saisie" aria-label="Logo avec effet de saisie" to="/">
+        <TypedComponent></TypedComponent>
+      </router-link>
+      <div class="header-right">
+        <div class="topnav" id="topNav">
+          <div class="dropdown">
+            <button class="dropbtn">
+              PEIP 2, INFO3
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <router-link
+                  class="nav-link"
+                  v-for="schoolInfo in schoolsInfo"
+                  :to="schoolRoad(schoolInfo.level, schoolInfo.title)"
+                  :key="schoolInfo.title"
+              >
+                {{ capitalize(schoolInfo.title) }}
+              </router-link
+              >
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="dropbtn">
+              Cours
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <router-link
+                  class="nav-link"
+                  v-for="studentName in studentsName"
+                  :to="studentRoad(studentName)"
+                  :key="studentName"
+              >
+                {{ capitalize(studentName) }}
+              </router-link
+              >
+            </div>
+          </div>
 
-					<div class="dropdown">
-						<button class="dropbtn">
-							Mes infos
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<div class="dropdown-content">
-							<a
-								title="Curriculum Vitae  long de SOLER Lilian"
-								href="https://docs.google.com/document/d/e/2PACX-1vTIakmEHVD5OEuQf1ujL0s3znDy66IYiaFabaZouxiNEOHB07AaQN6ceNhNqxTbYIb2C6XZi_b9L5i1/pub"
-								>CV long
-							</a>
-							<a
-								title="Curriculum Vitae court de SOLER Lilian"
-								href="https://vcard.didelo.fr"
-								>CV court</a
-							>
-						</div>
-					</div>
+          <div class="dropdown">
+            <button class="dropbtn">
+              Mes infos
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a
+                  title="Curriculum Vitae  long de SOLER Lilian"
+                  href="https://docs.google.com/document/d/e/2PACX-1vTIakmEHVD5OEuQf1ujL0s3znDy66IYiaFabaZouxiNEOHB07AaQN6ceNhNqxTbYIb2C6XZi_b9L5i1/pub"
+              >CV long
+              </a>
+              <a
+                  title="Curriculum Vitae court de SOLER Lilian"
+                  href="https://vcard.didelo.fr"
+              >CV court</a
+              >
+            </div>
+          </div>
 
-					<div class="dropdown">
-						<button class="dropbtn">
-							Admin
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<div class="dropdown-content">
-							<router-link class="nav-link" to="/login">
-								<span>Login</span>
-							</router-link>
-							<router-link class="nav-link" to="/signup">
-								<span>Signup</span>
-							</router-link>
-						</div>
-					</div>
+          <div class="dropdown">
+            <button class="dropbtn">
+              Admin
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <router-link class="nav-link" to="/login">
+                <span>Login</span>
+              </router-link>
+              <router-link class="nav-link" to="/signup">
+                <span>Signup</span>
+              </router-link>
+            </div>
+          </div>
 
-					<a title="Site de Noah SOLER'" href="https://noah.didelo.fr"
-						>Noah SOLER</a
-					>
-					<a href="javascript:void(0);" class="icon" @click="mobileNav()" alt="Rien" aria-label="Rien">
-						&#9776;</a
-					>
-				</div>
-			</div>
-		</div>
-	</header>
+          <a title="Site de Noah SOLER'" href="https://noah.didelo.fr"
+          >Noah SOLER</a
+          >
+          <a href="javascript:void(0);" class="icon" @click="mobileNav()" alt="Rien" aria-label="Rien">
+            &#9776;</a
+          >
+        </div>
+      </div>
+    </div>
+  </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import TypedComponent from "@/components/Typed.vue";
 import _axios from "@/plugins/axios";
-import { AxiosResponse } from "axios";
+import {AxiosResponse} from "axios";
 
 
 interface Student {
-	_id: string;
-	name: string;
-	class: string;
-	cours: {
-		_id: string;
-		__v: number;
-		month: string;
-		lessons: {
-			_id: string;
-			day: string;
-			title: string;
-			link: string;
-		}[];
-	}[];
+  _id: string;
+  name: string;
+  class: string;
+  cours: {
+    _id: string;
+    __v: number;
+    month: string;
+    lessons: {
+      _id: string;
+      day: string;
+      title: string;
+      link: string;
+    }[];
+  }[];
 }
 
 interface School {
-	_id: string;
-	level: string;
-	title: string;
-	contents: [
-		{
-			title: string;
-			_id: string;
-			subcontents: [
-				{
-					title: string;
-					_id: string;
-					link: string;
-				}
-			];
-		}
-	];
+  _id: string;
+  level: string;
+  title: string;
+  contents: [
+    {
+      title: string;
+      _id: string;
+      subcontents: [
+        {
+          title: string;
+          _id: string;
+          link: string;
+        }
+      ];
+    }
+  ];
 }
 
 interface SchoolInfo {
-	level: string;
-	title: string;
+  level: string;
+  title: string;
 }
 
 interface DataComponent {
-	studentsName: string[] | null;
-	schoolsInfo: SchoolInfo[] | null;
+  studentsName: string[] | null;
+  schoolsInfo: SchoolInfo[] | null;
 }
 
+
 export default defineComponent({
-	name: "Header",
-	components: {
-		TypedComponent,
-	},
-	data(): DataComponent {
-		return {
-			studentsName: null,
-			schoolsInfo: null,
-		};
-	},
-	methods: {
-		mobileNav() {
-			let x = document.getElementById("topNav");
-			if (x !== null) {
-				if (x.className === "topnav") {
-					x.className += " responsive";
-				} else {
-					x.className = "topnav";
-				}
-			}
-			return false;
-		},
-		loadStudents(){
-			_axios
-				.get("student")
-				.then((response: AxiosResponse<{ message: string; students: Student[] }>) => {
-					let newStudent: string[] = [];
-					response.data.students.forEach(element => {
-						newStudent.push(element.name);
-					});
-          newStudent.sort();
-					this.studentsName = newStudent;
-				})
-				.catch(error => {
-					console.log(error);
-				});
-		},
-		loadSchool(): void {
-			_axios
-			.get(`school`)
-			.then(
-				(res: AxiosResponse<School[]>) => {
-					let newschools: SchoolInfo[] = [];
-					res.data.forEach(element => {
-						newschools.push({level: element.level, title: element.title});
-					});
-					this.schoolsInfo = newschools;
-				}
-			);
-		},
-		studentRoad(studentName: string) {
-			return `/cours/student/${studentName}`;
-		},
-		schoolRoad(level: string, title: string) {
-			return `/school/${level}/${title}`;
-		},
-		capitalize(str: string): string {
-			if (str == "") return "";
-			if (str.length === 1) return str.toUpperCase();
-			str = str.replaceAll("-", " ");
-			return str.charAt(0).toUpperCase() + str.slice(1);
-		},
-	},
-	mounted() {
-		this.loadStudents();
-		this.loadSchool();
-	},
+  name: "Header",
+  components: {
+    TypedComponent,
+  },
+  data(): DataComponent {
+    return {
+      studentsName: null,
+      schoolsInfo: null,
+    };
+  },
+  methods: {
+    mobileNav() {
+      let x = document.getElementById("topNav");
+      if (x !== null) {
+        if (x.className === "topnav") {
+          x.className += " responsive";
+        } else {
+          x.className = "topnav";
+        }
+      }
+      return false;
+    },
+    loadStudents() {
+      _axios
+          .get("/v2/student/name/all")
+          .then((response: AxiosResponse) => {
+            if (response.data) {
+              this.studentsName = response.data;
+            }
+          })
+    },
+    loadSchool(): void {
+      _axios
+          .get(`school`)
+          .then(
+              (res: AxiosResponse<School[]>) => {
+                let newschools: SchoolInfo[] = [];
+                res.data.forEach(element => {
+                  newschools.push({level: element.level, title: element.title});
+                });
+                this.schoolsInfo = newschools;
+              }
+          );
+    },
+    studentRoad(studentName: string) {
+      return `/cours/student/${studentName}`;
+    },
+    schoolRoad(level: string, title: string) {
+      return `/school/${level}/${title}`;
+    },
+    capitalize(str: string): string {
+      if (str == "") return "";
+      if (str.length === 1) return str.toUpperCase();
+      str = str.replaceAll("-", " ");
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+  },
+  mounted() {
+    this.loadStudents();
+    this.loadSchool();
+  },
 });
 </script>
 
@@ -213,184 +210,185 @@ export default defineComponent({
 <style scoped lang="scss">
 /* Style the header with a grey background and some padding */
 .header {
-	overflow: hidden;
-	background-color: #333;
-	padding: 20px 10px;
+  overflow: hidden;
+  background-color: #333;
+  padding: 20px 10px;
 }
 
 /* Style the header links */
 .header a {
-	float: left;
-	color: black;
-	text-align: center;
-	padding: 12px;
-	text-decoration: none;
-	font-size: 18px;
-	line-height: 25px;
-	border-radius: 4px;
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 25px;
+  border-radius: 4px;
 }
 
 a {
-	color: white;
+  color: white;
 }
 
 /* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
 .header a.logo {
-	font-size: 25px;
-	font-weight: bold;
-	color: white;
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
 }
 
 /* Change the background color on mouse-over */
 .header a:hover {
-	background-color: #ddd;
-	color: black;
+  background-color: #ddd;
+  color: black;
 }
 
 /* Style the active/current link*/
 .header a.active {
-	background-color: dodgerblue;
-	color: white;
+  background-color: dodgerblue;
+  color: white;
 }
 
 /* Float the link section to the right */
 .header-right {
-	float: right;
+  float: right;
 }
 
 /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
 @media screen and (max-width: 1000px) {
-	.header a {
-		float: none;
-		display: block;
-		text-align: left;
-	}
-	.header-right {
-		float: none;
-	}
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .header-right {
+    float: none;
+  }
 }
+
 /* Add a black background color to the top navigation */
 .topnav {
-	background-color: #333;
-	overflow: hidden;
+  background-color: #333;
+  overflow: hidden;
 }
 
 /* Style the links inside the navigation bar */
 .topnav a {
-	float: left;
-	display: block;
-	color: #f2f2f2;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-	font-size: 17px;
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
 }
 
 /* Add an active class to highlight the current page */
 .active {
-	background-color: #4caf50;
-	color: white;
+  background-color: #4caf50;
+  color: white;
 }
 
 /* Hide the link that should open and close the topnav on small screens */
 .topnav .icon {
-	display: none;
+  display: none;
 }
 
 /* Dropdown container - needed to position the dropdown content */
 .dropdown {
-	float: left;
-	overflow: hidden;
+  float: left;
+  overflow: hidden;
 }
 
 /* Style the dropdown button to fit inside the topnav */
 .dropdown .dropbtn {
-	font-size: 17px;
-	border: none;
-	outline: none;
-	color: white;
-	padding: 14px 16px;
-	background-color: inherit;
-	font-family: inherit;
-	margin: 0;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
 }
 
 /* Style the dropdown content (hidden by default) */
 .dropdown-content {
-	display: none;
-	position: absolute;
-	background-color: #f9f9f9;
-	min-width: 160px;
-	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-	z-index: 1;
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 /* Style the links inside the dropdown */
 .dropdown-content a {
-	float: none;
-	color: black;
-	padding: 12px 16px;
-	text-decoration: none;
-	display: block;
-	text-align: left;
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
 }
 
 /* Add a dark background on topnav links and the dropdown button on hover */
 .topnav a:hover,
 .dropdown:hover .dropbtn {
-	background-color: #555;
-	color: white;
+  background-color: #555;
+  color: white;
 }
 
 /* Add a grey background to dropdown links on hover */
 .dropdown-content a:hover {
-	background-color: #ddd;
-	color: black;
+  background-color: #ddd;
+  color: black;
 }
 
 /* Show the dropdown menu when the user moves the mouse over the dropdown button */
 .dropdown:hover .dropdown-content {
-	display: block;
+  display: block;
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 1000px) {
-	.topnav a:not(:first-child),
-	.dropdown .dropbtn {
-		display: none;
-	}
-	.topnav a.icon {
-		float: right;
-		display: block;
-	}
+  .topnav a:not(:first-child),
+  .dropdown .dropbtn {
+    display: none;
+  }
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
 }
 
 /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
 @media screen and (max-width: 1000px) {
-	.topnav.responsive {
-		margin-left: 10vw;
-		position: relative;
-	}
-	.topnav.responsive a.icon {
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
-	.topnav.responsive a {
-		float: none;
-		display: block;
-		text-align: left;
-	}
-	.topnav.responsive .dropdown {
-		float: none;
-	}
-	.topnav.responsive .dropdown-content {
-		position: relative;
-	}
-	.topnav.responsive .dropdown .dropbtn {
-		display: block;
-		width: 100%;
-		text-align: left;
-	}
+  .topnav.responsive {
+    margin-left: 10vw;
+    position: relative;
+  }
+  .topnav.responsive a.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .topnav.responsive .dropdown {
+    float: none;
+  }
+  .topnav.responsive .dropdown-content {
+    position: relative;
+  }
+  .topnav.responsive .dropdown .dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
 }
 </style>

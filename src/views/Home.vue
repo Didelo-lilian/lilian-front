@@ -75,9 +75,7 @@ export default defineComponent({
       this.getArticles(this.priorityLanguages);
     }
     if (this.nonPriorityLanguages) {
-      setTimeout(() => {
-        this.getArticles(this.nonPriorityLanguages);
-      }, 1000);
+      this.getArticles(this.nonPriorityLanguages);
     }
   },
 });
