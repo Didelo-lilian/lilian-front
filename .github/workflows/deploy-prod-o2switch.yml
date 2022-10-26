@@ -1,0 +1,22 @@
+name: Deploy prod on o2switch
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_and_deploy_dev_o2switch:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          yarn
+          yarn run build:prod
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avzhe ssh --progress --delete
+          path: dist/
+          remote_path: /home/${{ secrets.O2SWITCH_USER }}/public_html/lilian/prod
+          remote_host: ${{ secrets.O2SWITCH_HOST }}
+          remote_user: ${{ secrets.O2SWITCH_USER }}
+          remote_key: ${{ secrets.SSH_KEY }}
