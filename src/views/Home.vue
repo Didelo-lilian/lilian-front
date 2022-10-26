@@ -27,7 +27,6 @@ interface Article {
 interface DataComponent {
   articles: null | Article[];
   priorityLanguages: string[];
-  nonPriorityLanguages: string[];
 }
 
 interface ResponseAux {
@@ -41,8 +40,7 @@ export default defineComponent({
   data(): DataComponent {
     return {
       articles: [],
-      priorityLanguages: ["French", "English"],
-      nonPriorityLanguages: ["Spanish", "German"]
+      priorityLanguages: ["French", "English", "Spanish"],
     };
   },
   methods: {
@@ -73,9 +71,6 @@ export default defineComponent({
   mounted() {
     if (this.priorityLanguages) {
       this.getArticles(this.priorityLanguages);
-    }
-    if (this.nonPriorityLanguages) {
-      this.getArticles(this.nonPriorityLanguages);
     }
   },
 });
