@@ -4,7 +4,7 @@
       <h1>{{ studentInfoMin?.level }} - {{ capitalize(studentInfoMin?.name) }}</h1>
       <ul class="parent">
         <div v-for="studentLessonMonth in studentLessons?.months" :key="studentLessonMonth.month">
-          <li>{{ MONTHS[studentLessonMonth.month.split('/')[0]] }} - {{ studentLessonMonth.month.split('/')[1] }}</li>
+          <li>{{ MONTHS[studentLessonMonth.month.split('/')[0]] }} - {{ studentLessonMonth.month.split('/')[1] }} :</li>
           <ul>
             <li v-for="studentLesson in studentLessonMonth.lessons" :key="studentLesson.title"> {{ studentLesson.day }}
               - <a :href="studentLesson.link" alt="{{ studentLesson.title }}">{{ studentLesson.title }}</a></li>
@@ -165,6 +165,10 @@ section {
   h1 {
     text-align: center;
     font-size: 3rem;
+  }
+
+  a:hover {
+    color: #ff0000;
   }
 }
 </style>
