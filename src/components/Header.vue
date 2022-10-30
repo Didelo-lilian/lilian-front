@@ -9,16 +9,16 @@
           <div class="dropdown">
             <button class="dropbtn">
               PEIP 2, INFO3
-              <i class="fa fa-caret-down"></i>
+              <i class="fas fa-sort-down"></i>
             </button>
             <div class="dropdown-content">
               <router-link
                   class="nav-link"
-                  v-for="schoolInfo in schoolsInfo"
-                  :to="schoolRoad(schoolInfo.level, schoolInfo.title)"
-                  :key="schoolInfo.title"
+                  v-for="school in schools"
+                  :to=schoolRoad(school)
+                  :key="school.split('/')[1]"
               >
-                {{ capitalize(schoolInfo.title) }}
+                {{ capitalize(school.split('/')[1]) }}
               </router-link
               >
             </div>
@@ -26,16 +26,16 @@
           <div class="dropdown">
             <button class="dropbtn">
               Cours
-              <i class="fa fa-caret-down"></i>
+              <i class="fa-solid fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
               <router-link
                   class="nav-link"
-                  v-for="studentName in studentsName"
-                  :to="studentRoad(studentName)"
-                  :key="studentName"
+                  v-for="student in studentsName"
+                  :to=studentRoad(student.name)
+                  :key=student.name
               >
-                {{ capitalize(studentName) }}
+                {{ capitalize(student.name) }}
               </router-link
               >
             </div>
@@ -44,7 +44,7 @@
           <div class="dropdown">
             <button class="dropbtn">
               Mes infos
-              <i class="fa fa-caret-down"></i>
+              <i class="fa-solid fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
               <a
@@ -63,7 +63,7 @@
           <div class="dropdown">
             <button class="dropbtn">
               Admin
-              <i class="fa fa-caret-down"></i>
+              <i class="fa-solid fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
               <router-link class="nav-link" to="/login">
@@ -94,50 +94,14 @@ import _axios from "@/plugins/axios";
 import {AxiosResponse} from "axios";
 
 
-interface Student {
-  _id: string;
+interface StudentInfoMin {
   name: string;
-  class: string;
-  cours: {
-    _id: string;
-    __v: number;
-    month: string;
-    lessons: {
-      _id: string;
-      day: string;
-      title: string;
-      link: string;
-    }[];
-  }[];
-}
-
-interface School {
-  _id: string;
   level: string;
-  title: string;
-  contents: [
-    {
-      title: string;
-      _id: string;
-      subcontents: [
-        {
-          title: string;
-          _id: string;
-          link: string;
-        }
-      ];
-    }
-  ];
-}
-
-interface SchoolInfo {
-  level: string;
-  title: string;
 }
 
 interface DataComponent {
-  studentsName: string[] | null;
-  schoolsInfo: SchoolInfo[] | null;
+  studentsName: StudentInfoMin[] | null;
+  schools: string[] | null;
 }
 
 
@@ -149,7 +113,7 @@ export default defineComponent({
   data(): DataComponent {
     return {
       studentsName: null,
-      schoolsInfo: null,
+      schools: null,
     };
   },
   methods: {
@@ -175,28 +139,24 @@ export default defineComponent({
     },
     loadSchool(): void {
       _axios
-          .get(`school`)
-          .then(
-              (res: AxiosResponse<School[]>) => {
-                let newschools: SchoolInfo[] = [];
-                res.data.forEach(element => {
-                  newschools.push({level: element.level, title: element.title});
-                });
-                this.schoolsInfo = newschools;
-              }
-          );
-    },
-    studentRoad(studentName: string) {
-      return `/cours/student/${studentName}`;
-    },
-    schoolRoad(level: string, title: string) {
-      return `/school/${level}/${title}`;
+          .get(`v2/school/subjects/all`)
+          .then((response: AxiosResponse) => {
+            if (response.data) {
+              this.schools = response.data;
+            }
+          })
     },
     capitalize(str: string): string {
       if (str == "") return "";
       if (str.length === 1) return str.toUpperCase();
       str = str.replaceAll("-", " ");
       return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    studentRoad(studentName: string): string {
+      return `/cours/student/${studentName}`;
+    },
+    schoolRoad(school: string): string {
+      return `/school/${school}`;
     },
   },
   mounted() {

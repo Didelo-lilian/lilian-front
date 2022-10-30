@@ -1,170 +1,170 @@
 <template>
-	<section>
-		<div class="cours-template">
-			<h1>{{ student?.class }} - {{ student?.name }}</h1>
+  <section>
+    <div class="cours-template">
+      <h1>{{ studentInfoMin?.level }} - {{ capitalize(studentInfoMin?.name) }}</h1>
+      <ul class="parent">
+        <div v-for="studentLessonMonth in studentLessons?.months" :key="studentLessonMonth.month">
+          <li>{{ MONTHS[studentLessonMonth.month.split('/')[0]] }} - {{ studentLessonMonth.month.split('/')[1] }}</li>
+          <ul>
+            <li v-for="studentLesson in studentLessonMonth.lessons" :key="studentLesson.title"> {{ studentLesson.day }}
+              - <a :href="studentLesson.link" alt="{{ studentLesson.title }}">{{ studentLesson.title }}</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <li>Utilitaires:</li>
+          <ul>
+            <div v-for="(util, index3) in utils" :key="'util-' + index3">
+              <li>
+                <a :href="util.link">{{ util.name }}</a>
+              </li>
+            </div>
+          </ul>
+        </div>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script lang="ts">
+
+/*
+
+<div class="school-template">
+			<h1>{{ school?.title }}</h1>
 			<ul class="parent">
-				<div v-for="(cours, index) in student?.cours" :key="'courses-' + index">
-					<li>{{ cours.month }}</li>
+				<div
+					v-for="(content, index) in school?.contents"
+					:key="'content-' + index"
+				>
+					<li>{{ content.title }}</li>
 					<ul>
 						<li
-							v-for="(lesson, index2) in cours?.lessons"
-							:key="'lesson-' + index2"
+							v-for="(subContent, index2) in content.subcontents"
+							:key="'sub-content-' + index2"
 						>
-							<a v-if="lesson.link.match('cours')" :href="lesson.link"
-								><span v-if="lesson.day != '-1'">{{ lesson.day }} - </span
-								>{{ lesson.title }}</a
-							>
-							<a v-else :href="lesson.link"
-								><span v-if="lesson.day != '-1'">{{ lesson.day }} - </span
-								>{{ lesson.title }}</a
-							>
+							<a :href="'https://data.lilian.didelo.fr/school/' + school?.level + '/' + realTitle  + '/' + subContent?.link">{{ subContent?.title }}</a>
 						</li>
-					</ul>
-				</div>
-				<div>
-					<li>Utilitaires:</li>
-					<ul>
-						<div v-for="(util, index3) in utils" :key="'util-' + index3">
-							<li>
-								<a :href="util.link">{{ util.title }}</a>
-							</li>
-						</div>
 					</ul>
 				</div>
 			</ul>
 		</div>
-	</section>
-</template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { AxiosResponse } from "axios";
+ */
+import {defineComponent, PropType} from "vue";
 import _axios from '@/plugins/axios';
 
-interface Student {
-	_id: string;
-	name: string;
-	class: string;
-	cours: {
-		_id: string;
-		__v: number;
-		month: string;
-		lessons: {
-			_id: string;
-			day: string;
-			title: string;
-			link: string;
-		}[];
-	}[];
-}
-
-interface Util {
-	_id: string;
-	title: string;
-	link: string;
-	__v: number;
-}
-
 interface DataComponent {
-	student: null | Student;
-	utils: null | Util[];
+  studentInfoMin: {
+    name: string;
+    level: string;
+  } | null;
+  studentLessons: {
+    name: string;
+    months: {
+      month: number;
+      lessons: {
+        day: number;
+        title: string;
+        link: string;
+      }[]
+    }
+  } | null;
+  utils: {
+    title: string;
+    link: string;
+  }[] | null;
+  MONTHS: string[];
 }
+
+const MONTHS = ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
 
 export default defineComponent({
-	name: "Students",
+  name: "Students",
 
-	props: {
-		name: {
-			type: String as PropType<string>,
-			required: true,
-			default: "kevin-j",
-		},
-	},
+  props: {
+    name: {
+      type: String as PropType<string>,
+      required: true,
+      default: "kevin-j",
+    },
+  },
 
-	data: (): DataComponent => ({
-		student: null,
-		utils: null,
-	}),
+  data: (): DataComponent => ({
+    studentInfoMin: null,
+    studentLessons: null,
+    utils: null,
+    MONTHS: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+  }),
 
-	mounted() {
-		this.loadStudent();
-		this.loadUtils();
-	},
+  mounted() {
+    this.loadStudent();
+    this.loadUtils();
+  },
 
-	watch: {
-		name() {
-			this.loadStudent();
-		},
-	},
+  watch: {
+    name() {
+      this.loadStudent();
+    },
+  },
 
-	methods: {
-		capitalize(str: string): string {
-			if (str == "") return "";
-			if (str.length === 1) return str.toUpperCase();
-			str = str.replaceAll("-", " ");
-			return str.charAt(0).toUpperCase() + str.slice(1);
-		},
-		loadStudent(): void {
-			_axios
-				.get(
-					`student/${this.name}`
-				)
-				.then((response: AxiosResponse<{ student: Student }>) => {
-					this.student = response.data.student;
-					this.student.name = this.capitalize(this.student.name);
-          this.student.cours.forEach(month => {
-                month.lessons.forEach(lesson => {
-                  if(lesson.link.match('./cours')) {
-                    lesson.link = lesson.link.replace('./cours', 'https://data.lilian.didelo.fr/cours');
-                  } else{
-                    if(lesson.link.match('cours/')) {
-                      lesson.link = lesson.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
-                    }
-                  }
-                });
-              });
-                  })
-        .catch((error) => {
-          console.log(error);
-        });
-		},
-		loadUtils(): void {
-			_axios
-				.get(`studentUtils`)
-				.then((response: AxiosResponse<Util[]>) => {
-					this.utils = response.data;
-          this.utils.forEach(util => {
-            if(util.link.match('cours/')) {
-              util.link = util.link.replace('cours/', 'https://data.lilian.didelo.fr/cours/');
-            }
+  methods: {
+    capitalize(str): string {
+      if (str) {
+        if (str == "") return "";
+        if (str.length === 1) return str.toUpperCase();
+        str = str.replaceAll("-", " ");
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      } else {
+        return "";
+      }
+    },
+    loadStudent(): void {
+      _axios
+          .get('v2/student/' + this.name)
+          .then((response) => {
+            this.studentInfoMin = response.data;
+            this.loadStudentLesson();
           })
-				});
-		},
-	},
+    },
+    loadStudentLesson(): void {
+      _axios
+          .get('v2/studentLesson')
+          .then((response) => {
+            this.studentLessons = response.data[0];
+          })
+    },
+    loadUtils(): void {
+      _axios
+          .get(`/v2/studentLesson/utils`)
+          .then((response) => {
+            this.utils = response.data;
+          });
+    },
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 section {
-	border: 1px solid white;
-	overflow: none;
+  border: 1px solid white;
+  overflow: none;
 
-	.parent {
-		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-		grid-gap: 2vh 5vw;
-		margin-bottom: 2vh;
-	}
+  .parent {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-gap: 2vh 5vw;
+    margin-bottom: 2vh;
+  }
 
-	.parent div li {
-		width: 100%;
-		font-size: 1.5rem;
-	}
+  .parent div li {
+    width: 100%;
+    font-size: 1.5rem;
+  }
 
-	h1 {
-		text-align: center;
-		font-size: 3rem;
-	}
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+  }
 }
 </style>
