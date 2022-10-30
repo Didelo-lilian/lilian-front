@@ -139,7 +139,7 @@ export default defineComponent({
     },
     loadStudentLesson(): void {
       _axios
-          .get('v2/studentLesson' + this.name)
+          .get('v2/studentLesson/student/' + this.name)
           .then((response: AxiosResponse<StudentLessons>) => {
             this.studentLessons = response.data;
           })
