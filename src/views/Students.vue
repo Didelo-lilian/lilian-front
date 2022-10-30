@@ -4,7 +4,7 @@
       <h1>{{ studentInfoMin?.level }} - {{ capitalize(studentInfoMin?.name) }}</h1>
       <ul class="parent">
         <div v-for="studentLessonMonth in studentLessons?.months" :key="studentLessonMonth.month">
-          <li>{{ MONTHS[studentLessonMonth.month.split('/')[0]] }} - {{ studentLessonMonth.month.split('/')[1] }} :</li>
+          <li>{{ displayMonth(studentLessonMonth?.month) }} :</li>
           <ul>
             <li v-for="studentLesson in studentLessonMonth.lessons" :key="studentLesson.title"> {{ studentLesson.day }}
               - <a :href="studentLesson.link" alt="{{ studentLesson.title }}">{{ studentLesson.title }}</a></li>
@@ -52,27 +52,38 @@
  */
 import {defineComponent, PropType} from "vue";
 import _axios from '@/plugins/axios';
+import {AxiosResponse} from "axios";
+
+interface StudentInfoMin {
+  name: string,
+  level: string
+}
+
+interface StudentLesson {
+  day: string,
+  title: string,
+  link: string
+}
+
+interface StudentLessonMonth {
+  month: string,
+  lessons: StudentLesson[]
+}
+
+interface StudentLessons {
+  name: string,
+  months: StudentLessonMonth[]
+}
+
+interface Util {
+  name: string,
+  link: string
+}
 
 interface DataComponent {
-  studentInfoMin: {
-    name: string;
-    level: string;
-  } | null;
-  studentLessons: {
-    name: string;
-    months: {
-      month: number;
-      lessons: {
-        day: number;
-        title: string;
-        link: string;
-      }[]
-    }
-  } | null;
-  utils: {
-    title: string;
-    link: string;
-  }[] | null;
+  studentInfoMin: StudentInfoMin | null;
+  studentLessons: StudentLessons | null;
+  utils: Util[] | null;
   MONTHS: string[];
 }
 
@@ -108,7 +119,7 @@ export default defineComponent({
   },
 
   methods: {
-    capitalize(str): string {
+    capitalize(str: string): string {
       if (str) {
         if (str == "") return "";
         if (str.length === 1) return str.toUpperCase();
@@ -121,25 +132,34 @@ export default defineComponent({
     loadStudent(): void {
       _axios
           .get('v2/student/' + this.name)
-          .then((response) => {
+          .then((response: AxiosResponse<StudentInfoMin>) => {
             this.studentInfoMin = response.data;
             this.loadStudentLesson();
           })
     },
     loadStudentLesson(): void {
       _axios
-          .get('v2/studentLesson')
-          .then((response) => {
-            this.studentLessons = response.data[0];
+          .get('v2/studentLesson' + this.name)
+          .then((response: AxiosResponse<StudentLessons>) => {
+            this.studentLessons = response.data;
           })
     },
     loadUtils(): void {
       _axios
           .get(`/v2/studentLesson/utils`)
-          .then((response) => {
+          .then((response: AxiosResponse<Util[]>) => {
             this.utils = response.data;
           });
     },
+    displayMonth(month: string): string {
+      if (!month) {
+        return "";
+      }
+      const monthNumber = parseInt(month.split('/')[0]);
+      let monthString: string = MONTHS[monthNumber];
+      let year: string = month.split('/')[1];
+      return monthString + " - " + year;
+    }
   },
 });
 </script>
