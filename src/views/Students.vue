@@ -3,10 +3,11 @@
     <div class="cours-template">
       <h1>{{ studentInfoMin?.level }} - {{ capitalize(studentInfoMin?.name) }}</h1>
       <ul class="parent">
-        <div v-for="studentLessonMonth in studentLessons?.months" :key="studentLessonMonth.month">
+        <div v-for="(studentLessonMonth, index) in studentLessons?.months" :key="index">
           <li>{{ displayMonth(studentLessonMonth?.month) }} :</li>
           <ul>
-            <li v-for="studentLesson in studentLessonMonth.lessons" :key="studentLesson.title"> {{ studentLesson.day }}
+            <li v-for=" studentLesson in studentLessonMonth.lessons
+        " :key="studentLesson.title"> {{ studentLesson.day }}
               - <a :href="studentLesson.link" alt="{{ studentLesson.title }}">{{ studentLesson.title }}</a></li>
           </ul>
         </div>
@@ -28,28 +29,6 @@
 
 <script lang="ts">
 
-/*
-
-<div class="school-template">
-			<h1>{{ school?.title }}</h1>
-			<ul class="parent">
-				<div
-					v-for="(content, index) in school?.contents"
-					:key="'content-' + index"
-				>
-					<li>{{ content.title }}</li>
-					<ul>
-						<li
-							v-for="(subContent, index2) in content.subcontents"
-							:key="'sub-content-' + index2"
-						>
-							<a :href="'https://data.lilian.didelo.fr/school/' + school?.level + '/' + realTitle  + '/' + subContent?.link">{{ subContent?.title }}</a>
-						</li>
-					</ul>
-				</div>
-			</ul>
-		</div>
- */
 import {defineComponent, PropType} from "vue";
 import _axios from '@/plugins/axios';
 import {AxiosResponse} from "axios";
@@ -140,8 +119,8 @@ export default defineComponent({
     loadStudentLesson(): void {
       _axios
           .get('v2/studentLesson/student/' + this.name)
-          .then((response: AxiosResponse<StudentLessons>) => {
-            this.studentLessons = response.data;
+          .then((response: AxiosResponse<StudentLessons[]>) => {
+            this.studentLessons = response.data[0];
           })
     },
     loadUtils(): void {
@@ -152,6 +131,7 @@ export default defineComponent({
           });
     },
     displayMonth(month: string): string {
+      console.log("month: " + month);
       if (!month) {
         return "";
       }
