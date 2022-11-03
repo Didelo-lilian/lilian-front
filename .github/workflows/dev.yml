@@ -20,9 +20,10 @@ jobs:
           remote_host: ${{ secrets.O2SWITCH_HOST }}
           remote_user: ${{ secrets.O2SWITCH_USER }}
           remote_key: ${{ secrets.SSH_KEY }}
-              
+
     build_and_deploy_preprod_o2switch:
       runs-on: self-hosted
+      needs: build_and_deploy_dev_o2switch
       steps:
         - uses: actions/checkout@v2
         - run: |
