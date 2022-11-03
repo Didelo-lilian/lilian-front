@@ -1,4 +1,4 @@
-name: Deploy prod on o2switch
+name: DEPLOY-PROD
 on:
   push:
     branches:
