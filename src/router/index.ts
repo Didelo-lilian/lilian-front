@@ -14,12 +14,6 @@ const routes: Array<RouteRecordRaw> = [
 		props: true,
 	},
 	{
-		path: "/school/:levelProp/:titleProp",
-		name: "School",
-		component: () => import("../views/School.vue"),
-		props: true,
-	},
-	{
 		path: "/signup",
 		name: "Signup",
 		component: () => import("../views/Signup.vue"),

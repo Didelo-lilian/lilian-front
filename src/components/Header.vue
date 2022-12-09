@@ -8,23 +8,6 @@
         <div class="topnav" id="topNav">
           <div class="dropdown">
             <button class="dropbtn">
-              PEIP 2, INFO3
-              <i class="fas fa-sort-down"></i>
-            </button>
-            <div class="dropdown-content">
-              <router-link
-                  class="nav-link"
-                  v-for="school in schools"
-                  :to=schoolRoad(school)
-                  :key="school.split('/')[1]"
-              >
-                {{ capitalize(school.split('/')[1]) }}
-              </router-link
-              >
-            </div>
-          </div>
-          <div class="dropdown">
-            <button class="dropbtn">
               Cours
               <i class="fa-solid fa-caret-down"></i>
             </button>
@@ -37,25 +20,6 @@
               >
                 {{ capitalize(student.name) }}
               </router-link
-              >
-            </div>
-          </div>
-
-          <div class="dropdown">
-            <button class="dropbtn">
-              Mes infos
-              <i class="fa-solid fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-              <a
-                  title="Curriculum Vitae  long de SOLER Lilian"
-                  href="https://docs.google.com/document/d/e/2PACX-1vTIakmEHVD5OEuQf1ujL0s3znDy66IYiaFabaZouxiNEOHB07AaQN6ceNhNqxTbYIb2C6XZi_b9L5i1/pub"
-              >CV long
-              </a>
-              <a
-                  title="Curriculum Vitae court de SOLER Lilian"
-                  href="https://vcard.didelo.fr"
-              >CV court</a
               >
             </div>
           </div>
@@ -75,8 +39,8 @@
             </div>
           </div>
 
-          <a title="Site de Noah SOLER'" href="https://noah.didelo.fr"
-          >Noah SOLER</a
+          <a title="Curriculum Vitae'" href="https://docs.google.com/document/d/e/2PACX-1vTIakmEHVD5OEuQf1ujL0s3znDy66IYiaFabaZouxiNEOHB07AaQN6ceNhNqxTbYIb2C6XZi_b9L5i1/pub"
+          >CV</a
           >
           <a href="javascript:void(0);" class="icon" @click="mobileNav()" alt="Rien" aria-label="Rien">
             &#9776;</a
@@ -101,7 +65,6 @@ interface StudentInfoMin {
 
 interface DataComponent {
   studentsName: StudentInfoMin[] | null;
-  schools: string[] | null;
 }
 
 
@@ -113,7 +76,6 @@ export default defineComponent({
   data(): DataComponent {
     return {
       studentsName: null,
-      schools: null,
     };
   },
   methods: {
@@ -137,15 +99,6 @@ export default defineComponent({
             }
           })
     },
-    loadSchool(): void {
-      _axios
-          .get(`v2/school/subjects/all`)
-          .then((response: AxiosResponse) => {
-            if (response.data) {
-              this.schools = response.data;
-            }
-          })
-    },
     capitalize(str: string): string {
       if (str == "") return "";
       if (str.length === 1) return str.toUpperCase();
@@ -155,13 +108,9 @@ export default defineComponent({
     studentRoad(studentName: string): string {
       return `/cours/student/${studentName}`;
     },
-    schoolRoad(school: string): string {
-      return `/school/${school}`;
-    },
   },
   mounted() {
     this.loadStudents();
-    this.loadSchool();
   },
 });
 </script>
