@@ -9,26 +9,26 @@ npm or yarn
 ## Installation
 ### Clone the repository:
 ```bash
-git clone https://github.com/your-username/didelo-frontend.git
+git clone git@github.com:Didelo-lilian/lilian-front.git
 ```
 ### Install the dependencies:
 ```bash
-cd didelo-frontend
+cd lilian-front
 npm install
 ```
 or
 ```bash
-cd didelo-frontend
+cd lilian-front
 yarn
 ```
 
 ### Create a .env file with the following variables:
 
 ```bash
-VUE_APP_API_URL=https://didelo.fr/api
+VUE_APP_API_URL=https://api.didelo.fr
 VUE_APP_API_KEY=your-api-key
 ```
-Replace https://didelo.fr/api with the URL of your API, and your-api-key with your API key.
+Replace https://api.didelo.fr with the URL of your API, and your-api-key with your API key.
 
 ## Running the application
 To start the development server, run the following command:
