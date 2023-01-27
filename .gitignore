@@ -26,5 +26,10 @@ node_modules
 .DS_Store
 
 dist/
-node_modules
+node_modules/
+
+deploy.sh
+
+package-lock.json
+
 
